@@ -32,6 +32,7 @@ class ServerModel with ChangeNotifier {
   bool _clipboardOk = false;
   bool _showElevation = false;
   bool hideCm = false;
+  bool connNotifyEnabled = true;
   int _connectStatus = 0; // Rendezvous Server status
   String _verificationMethod = "";
   String _temporaryPasswordLength = "";
@@ -170,7 +171,7 @@ class ServerModel with ChangeNotifier {
             }
           } else {
             _zeroClientLengthCounter = 0;
-            if (!hideCm) showCmWindow();
+            if (!hideCm && connNotifyEnabled) showCmWindow();
           }
         }
       }
@@ -512,7 +513,7 @@ class ServerModel with ChangeNotifier {
     if (desktopType == DesktopType.cm) {
       if (_clients.isEmpty) {
         hideCmWindow();
-      } else if (!hideCm) {
+      } else if (!hideCm && connNotifyEnabled) {
         showCmWindow();
       }
     }
@@ -556,7 +557,7 @@ class ServerModel with ChangeNotifier {
         _clients.removeAt(index_disconnected);
         tabController.remove(index_disconnected);
       }
-      if (desktopType == DesktopType.cm && !hideCm) {
+      if (desktopType == DesktopType.cm && !hideCm && connNotifyEnabled) {
         showCmWindow();
       }
       scrollToBottom();
@@ -576,7 +577,7 @@ class ServerModel with ChangeNotifier {
         onTap: () {},
         page: desktop.buildConnectionCard(client)));
     Future.delayed(Duration.zero, () async {
-      if (!hideCm) windowOnTop(null);
+      if (!hideCm && connNotifyEnabled) windowOnTop(null);
     });
     // Only do the hidden task when on Desktop.
     if (client.authorized && isDesktop) {
@@ -754,7 +755,7 @@ class ServerModel with ChangeNotifier {
         if (client.incomingVoiceCall) {
           if (isAndroid) {
             showVoiceCallDialog(client);
-          } else {
+          } else if (connNotifyEnabled) {
             // Has incoming phone call, let's set the window on top.
             Future.delayed(Duration.zero, () {
               windowOnTop(null);

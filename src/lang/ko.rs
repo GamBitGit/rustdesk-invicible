@@ -813,5 +813,6 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("shortcut-key-not-supported", ""),
         ("On", ""),
         ("Off", ""),
+        ("Connection notifications", "연결 알림"),
     ].iter().cloned().collect();
 }

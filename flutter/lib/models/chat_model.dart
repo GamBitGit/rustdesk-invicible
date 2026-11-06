@@ -370,7 +370,8 @@ class ChatModel with ChangeNotifier {
       return;
     }
     if (text.isEmpty) return;
-    if (desktopType == DesktopType.cm) {
+    if (desktopType == DesktopType.cm &&
+        session.serverModel.connNotifyEnabled) {
       await showCmWindow();
     }
     String? peerId;
@@ -431,7 +432,9 @@ class ChatModel with ChangeNotifier {
         return;
       }
       if (isDesktop) {
-        windowOnTop(null);
+        if (session.serverModel.connNotifyEnabled) {
+          windowOnTop(null);
+        }
         // disable auto jumpTo other tab when hasFocus, and mark unread message
         final currentSelectedTab =
             session.serverModel.tabController.state.value.selectedTabInfo;

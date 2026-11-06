@@ -1,4 +1,4 @@
-﻿lazy_static::lazy_static! {
+lazy_static::lazy_static! {
 pub static ref T: std::collections::HashMap<&'static str, &'static str> =
     [
         ("Status", "حالت"),
@@ -813,6 +813,7 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("shortcut-key-not-supported", ""),
         ("On", ""),
         ("Off", ""),
+        ("Connection notifications", "کنکشن کی اطلاعات"),
     ].iter().cloned().collect();
 }
 

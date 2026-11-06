@@ -291,7 +291,16 @@ void runConnectionManagerScreen() async {
   );
   final hide = await bind.cmGetConfig(name: "hide_cm") == 'true';
   gFFI.serverModel.hideCm = hide;
-  if (hide) {
+  // Options arrive from the service over IPC asynchronously; without waiting
+  // for the sync, mainGetOption below returns "" and falls back to default.
+  for (var i = 0; i < 50 && !await bind.optionSynced(); i++) {
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
+  final connNotify =
+      await bind.mainGetOption(key: kOptionEnableConnectionNotifications);
+  gFFI.serverModel.connNotifyEnabled =
+      option2bool(kOptionEnableConnectionNotifications, connNotify);
+  if (hide || !gFFI.serverModel.connNotifyEnabled) {
     await hideCmWindow(isStartup: true);
   } else {
     await showCmWindow(isStartup: true);

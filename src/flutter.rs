@@ -1507,7 +1507,12 @@ pub mod connection_manager {
     use std::collections::HashMap;
 
     #[cfg(any(target_os = "android"))]
-    use hbb_common::log;
+    use base::config::keys::OPTION_ENABLE_CONNECTION_NOTIFICATIONS;
+    #[cfg(any(target_os = "android"))]
+    use hbb_common::{
+        config::{option2bool, Config},
+        log,
+    };
     #[cfg(any(target_os = "android"))]
     use scrap::android::call_main_service_set_by_name;
     use serde_json::json;
@@ -1519,16 +1524,26 @@ pub mod connection_manager {
     #[derive(Clone)]
     struct FlutterHandler {}
 
+    #[cfg(target_os = "android")]
+    fn connection_notifications_enabled() -> bool {
+        option2bool(
+            OPTION_ENABLE_CONNECTION_NOTIFICATIONS,
+            &Config::get_option(OPTION_ENABLE_CONNECTION_NOTIFICATIONS),
+        )
+    }
+
     impl InvokeUiCM for FlutterHandler {
         //TODO port_forward
         fn add_connection(&self, client: &crate::ui_cm_interface::Client) {
             let client_json = serde_json::to_string(&client).unwrap_or("".into());
             // send to Android service, active notification no matter UI is shown or not.
             #[cfg(target_os = "android")]
-            if let Err(e) =
-                call_main_service_set_by_name("add_connection", Some(&client_json), None)
-            {
-                log::debug!("call_main_service_set_by_name fail,{}", e);
+            if connection_notifications_enabled() {
+                if let Err(e) =
+                    call_main_service_set_by_name("add_connection", Some(&client_json), None)
+                {
+                    log::debug!("call_main_service_set_by_name fail,{}", e);
+                }
             }
             // send to UI, refresh widget
             self.push_event("add_connection", &[("client", &client_json)]);
@@ -1564,10 +1579,14 @@ pub mod connection_manager {
             let client_json = serde_json::to_string(&client).unwrap_or("".into());
             // send to Android service, active notification no matter UI is shown or not.
             #[cfg(target_os = "android")]
-            if let Err(e) =
-                call_main_service_set_by_name("update_voice_call_state", Some(&client_json), None)
-            {
-                log::debug!("call_main_service_set_by_name fail,{}", e);
+            if connection_notifications_enabled() {
+                if let Err(e) = call_main_service_set_by_name(
+                    "update_voice_call_state",
+                    Some(&client_json),
+                    None,
+                ) {
+                    log::debug!("call_main_service_set_by_name fail,{}", e);
+                }
             }
             self.push_event("update_voice_call_state", &[("client", &client_json)]);
         }

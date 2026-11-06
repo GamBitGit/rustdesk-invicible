@@ -97,6 +97,8 @@ const String kOptionEnableLanDiscovery = "enable-lan-discovery";
 const String kOptionWhitelist = "whitelist";
 const String kOptionIdWhitelist = "id-whitelist";
 const String kOptionEnableAbr = "enable-abr";
+const String kOptionEnableConnectionNotifications =
+    "enable-connection-notifications";
 const String kOptionEnableRecordSession = "enable-record-session";
 const String kOptionDirectServer = "direct-server";
 const String kOptionDirectAccessPort = "direct-access-port";
